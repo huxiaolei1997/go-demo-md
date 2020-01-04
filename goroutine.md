@@ -141,3 +141,84 @@ func main() {
 
 
 ![image-20191222191926692](https://tva1.sinaimg.cn/large/006tNbRwgy1ga5pw2g281j315m0i8wjd.jpg)
+
+
+
+Select的使用
+
+定时器的使用
+
+在Select中使用Nil Channel
+
+
+
+传统同步机制
+
+WaitGroup
+
+Mutex
+
+Cond
+
+
+
+使用 go run -race 来检测数据访问冲突
+
+比如 go run -race atomic.go，运行结果如下：
+
+25行读取数据的同时，11行写入了数据，数据发生了冲突
+
+```go
+package main
+
+import (
+   "fmt"
+   "time"
+)
+
+type atomicInt int
+
+func (a *atomicInt) increment() {
+   *a++ // 11行写入数据
+}
+
+func (a *atomicInt) get() int {
+   return int(*a)
+}
+
+func main() {
+   var a atomicInt
+   a.increment()
+   go func() {
+      a.increment()
+   }()
+   time.Sleep(time.Millisecond)
+   fmt.Println(a) // 25行读取数据
+}
+```
+
+```
+
+```
+
+==================
+WARNING: DATA RACE
+Read at 0x00c0000b0000 by main goroutine:
+  main.main()
+      /Users/huxiaolei/GoWorkspace/learngo/src/basic/atomic/atomic.go:25 +0xc5
+
+Previous write at 0x00c0000b0000 by goroutine 6:
+  main.main.func1()
+      /Users/huxiaolei/GoWorkspace/learngo/src/basic/atomic/atomic.go:11 +0x51
+
+Goroutine 6 (finished) created at:
+  main.main()
+      /Users/huxiaolei/GoWorkspace/learngo/src/basic/atomic/atomic.go:21 +0xaa
+==================
+2
+Found 1 data race(s)
+exit status 66
+
+```
+
+```
