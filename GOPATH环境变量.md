@@ -12,13 +12,15 @@
 
 ```shell
 go get github.com/gpmgo/gopm
-go install github.com/gpmgo/gop
+go install github.com/gpmgo/gopm
 ```
 
 
 
 如果能够科学上网，那么就不需要安装 gopm，可以直接通过go命令来安装 各种包，比如安装goimports，可以帮助我们移除无用的包
 
+> go get golang.org/x/tools/cmd/goimports
+>
 > go install golang.org/x/tools/cmd/goimports   
 
 
